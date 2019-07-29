@@ -41,10 +41,10 @@ class PlayGame extends Phaser.Scene {
         this.player.flipX = true;
 
         // create and play Henesys background music
-        //var HenBGMMusic = this.sound.add('HenesysBGM');
-        //HenBGMMusic.play();
-        //HenBGMMusic.setLoop(true);
-        //HenBGMMusic.setVolume(0.3);
+        var HenBGMMusic = this.sound.add('HenesysBGM');
+        HenBGMMusic.play();
+        HenBGMMusic.setLoop(true);
+        HenBGMMusic.setVolume(0.3);
 
         // this makes the camera follow the player
         //this.cameras.main.startFollow(this.player, true, 0.08, 0.08);
