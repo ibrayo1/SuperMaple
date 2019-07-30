@@ -10,7 +10,7 @@ class PlayGame extends Phaser.Scene {
         this.load.spritesheet('playerjumping', 'assets/playerjump.png', {frameWidth: 49, frameHeight: 71});
         this.load.spritesheet('maplewarriorefct', 'assets/maplewarrioreffect.png', {frameWidth: 264, frameHeight: 426});
         this.load.audio('HenesysBGM', 'assets/sounds/HenesysMusic.mp3');
-        //this.load.audio('JumpSFX', 'assets/sounds/JumpSFX.mp3');
+        this.load.audio('JumpSFX', 'assets/sounds/JumpSFX.mp3');
     }
 
     create(){
@@ -90,7 +90,7 @@ class PlayGame extends Phaser.Scene {
         if (this.cursors.space.isDown && this.player.body.onFloor()){
             this.player.setVelocityY(-390);
             this.maplewarrior.setVelocityY(-390);
-            //this.sound.play('JumpSFX');
+            this.sound.play('JumpSFX');
         } 
     }
 
