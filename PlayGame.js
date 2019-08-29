@@ -90,7 +90,10 @@ class PlayGame extends Phaser.Scene {
         if ((this.cursors.space.isDown || this.cursors.up.isDown) && this.player.body.onFloor()){
             this.player.setVelocityY(-390);
             this.maplewarrior.setVelocityY(-390);
+
+            // play player jump animation and jump sound effect
             this.player.anims.play('player_jump_anim', true);
+            this.sound.play('JumpSFX');
         }
     }
 
