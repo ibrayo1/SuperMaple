@@ -54,44 +54,44 @@ class PlayGame extends Phaser.Scene {
     }
 
     update(){
-        if (this.cursors.left.isDown)
-        {
+        // control the player with left of right keys
+        if (this.cursors.left.isDown){
             this.player.setVelocityX(-150);
             this.maplewarrior.setVelocityX(-150);
-            
+
             this.player.flipX = false; // turns the sprite to face the left
             this.maplewarrior.flipX = false;
 
-            if(this.player.body.onFloor())
+            if(this.player.body.onFloor()){
                 this.player.anims.play('player_walk_anim', true);
-        }
-        else if (this.cursors.right.isDown)
-        {
+            }
+        } else if (this.cursors.right.isDown){
             this.player.setVelocityX(150);
             this.maplewarrior.setVelocityX(150);
-            
+
             this.player.flipX = true; // turns the sprite to face the right
             this.maplewarrior.flipX = true;
 
-            if(this.player.body.onFloor())
+            if (this.player.body.onFloor()){
                 this.player.anims.play('player_walk_anim', true);
-        }
-        else if (!this.cursors.right.isDown && !this.cursors.left.isDown)
-        {
+            }
+        } else {
+            // if no keys are pressed, the player keeps still
             this.player.setVelocityX(0);
             this.maplewarrior.setVelocityX(0);
-            this.player.anims.play('player_stand_anim', true);
+            // Only show the idle animation if the player is footed
+            if(this.player.body.onFloor()){
+                this.player.anims.play('player_stand_anim', true);
+            }
+
         }
 
-        if (!this.player.body.onFloor()){
-            this.player.anims.play('player_jump_anim', true);
-        }
-
-        if (this.cursors.space.isDown && this.player.body.onFloor()){
+        // Player can jump while walking any direction by pressing spacebar or 'up' arrow key
+        if ((this.cursors.space.isDown || this.cursors.up.isDown) && this.player.body.onFloor()){
             this.player.setVelocityY(-390);
             this.maplewarrior.setVelocityY(-390);
-            this.sound.play('JumpSFX');
-        } 
+            this.player.anims.play('player_jump_anim', true);
+        }
     }
 
     create_animations(){
