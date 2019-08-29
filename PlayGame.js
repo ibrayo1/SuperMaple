@@ -5,15 +5,34 @@ class PlayGame extends Phaser.Scene {
 
     // load up all the require sprites/audio/images/etc. required
     preload(){
+        this.load.tilemapTiledJSON('map', 'assets/maps/super-mario.json');
+        this.load.image('tiles1', 'assets/maps/super-mario.png');
+
         this.load.spritesheet('playerwalking', 'assets/playerwalk.png', {frameWidth: 49, frameHeight: 72});
         this.load.spritesheet('playerstanding', 'assets/playerstanding.png', {frameWidth: 49, frameHeight: 72});
         this.load.spritesheet('playerjumping', 'assets/playerjump.png', {frameWidth: 49, frameHeight: 71});
+        
         this.load.spritesheet('maplewarriorefct', 'assets/maplewarrioreffect.png', {frameWidth: 264, frameHeight: 426});
+        
         this.load.audio('HenesysBGM', 'assets/sounds/HenesysMusic.mp3');
         this.load.audio('JumpSFX', 'assets/sounds/JumpSFX.mp3');
     }
 
     create(){
+        this.cameras.main.setBounds(0, 0, 5766.4, 170);
+        this.physics.world.setBounds(0, 0, 5766.4, 408);
+        
+        var map = this.make.tilemap({key: 'map'});
+        var tileset = map.addTilesetImage('SuperMarioBros-World1-1', 'tiles1');
+        var layer = map.createStaticLayer('World1', tileset, 0, 0);
+
+        layer.setCollisionBetween(14, 16, true);
+        layer.setCollisionBetween(21, 22, true);
+        layer.setCollisionBetween(27, 28, true);
+        layer.setCollision([10, 13, 17, 40]);
+
+        layer.setScale(1.7);
+
         // changes the background color of the canvas
         this.cameras.main.setBackgroundColor(0xf2f2f2);
 
@@ -40,6 +59,12 @@ class PlayGame extends Phaser.Scene {
         this.player.body.setCollideWorldBounds(true);
         this.player.flipX = true;
 
+        this.player.setScale(0.70);
+        this.maplewarrior.setScale(0.70);
+
+        this.physics.add.collider(this.player, layer);
+        this.physics.add.collider(this.maplewarrior, layer);
+
         // create and play Henesys background music
         var HenBGMMusic = this.sound.add('HenesysBGM');
         HenBGMMusic.play();
@@ -47,7 +72,8 @@ class PlayGame extends Phaser.Scene {
         HenBGMMusic.setVolume(0.3);
 
         // this makes the camera follow the player
-        //this.cameras.main.startFollow(this.player, true, 0.08, 0.08);
+        this.cameras.main.setZoom(1.25);
+        this.cameras.main.startFollow(this.player, true, 0.08, 0.08);
 
         this.cursors = this.input.keyboard.createCursorKeys();
 
@@ -88,8 +114,8 @@ class PlayGame extends Phaser.Scene {
 
         // Player can jump while walking any direction by pressing spacebar or 'up' arrow key
         if ((this.cursors.space.isDown || this.cursors.up.isDown) && this.player.body.onFloor()){
-            this.player.setVelocityY(-390);
-            this.maplewarrior.setVelocityY(-390);
+            this.player.setVelocityY(-500);
+            this.maplewarrior.setVelocityY(-500);
 
             // play player jump animation and jump sound effect
             this.player.anims.play('player_jump_anim', true);
