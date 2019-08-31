@@ -104,12 +104,6 @@ class PlayGame extends Phaser.Scene {
         if (!this.player.body.onFloor()){
             this.player.anims.play('player_jump_anim', true);
         }
-
-        if (this.attackButton.isDown){
-            this.player.anims.play('player_att_anim', true);
-            if(this.player.body.onFloor())
-                this.player.setVelocityX(0);
-        }
     }
 
     create_animations(){
@@ -151,20 +145,6 @@ class PlayGame extends Phaser.Scene {
                 suffix: '.png',
                 start: 0,
                 end: 1,
-                zeroPad: 0
-            }),
-            repeat: -1
-        });
-
-        // player attack animation
-        this.anims.create({
-            key: 'player_att_anim',
-            frameRate: 4,
-            frames: this.anims.generateFrameNames('player_sprites', {
-                prefix: 'shoot1_',
-                suffix: '.png',
-                start: 0,
-                end: 2,
                 zeroPad: 0
             }),
             repeat: -1
