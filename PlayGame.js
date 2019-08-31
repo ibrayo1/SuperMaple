@@ -10,7 +10,7 @@ class PlayGame extends Phaser.Scene {
 
         this.load.spritesheet('playerwalking', 'assets/playerwalk.png', {frameWidth: 49, frameHeight: 72});
         this.load.spritesheet('playerstanding', 'assets/playerstanding.png', {frameWidth: 49, frameHeight: 72});
-        this.load.spritesheet('playerjumping', 'assets/playerjump.png', {frameWidth: 49, frameHeight: 72});
+        this.load.spritesheet('playerjumping', 'assets/playerjump.png', {frameWidth: 49, frameHeight: 71});
         
         this.load.spritesheet('maplewarriorefct', 'assets/maplewarrioreffect.png', {frameWidth: 264, frameHeight: 426});
         
@@ -19,8 +19,8 @@ class PlayGame extends Phaser.Scene {
     }
 
     create(){
-        this.cameras.main.setBounds(0, 0, 5766.4, 170);
-        this.physics.world.setBounds(0, 0, 5766.4, 408);
+        this.cameras.main.setBounds(0, 0, 8988.8, 265);
+        this.physics.world.setBounds(0, 0, 8988.8, 636);
         
         var map = this.make.tilemap({key: 'map'});
         var tileset = map.addTilesetImage('SuperMarioBros-World1-1', 'tiles1');
@@ -31,7 +31,7 @@ class PlayGame extends Phaser.Scene {
         layer.setCollisionBetween(27, 28, true);
         layer.setCollision([10, 13, 17, 40]);
 
-        layer.setScale(1.95);
+        layer.setScale(2.65);
 
         // changes the background color of the canvas
         this.cameras.main.setBackgroundColor(0xf2f2f2);
@@ -46,7 +46,7 @@ class PlayGame extends Phaser.Scene {
         this.sound.add('JumpSFX');
 
         // create maple warrior skll sprite
-        this.maplewarrior = this.physics.add.sprite(200, 750, 'maplewarriorefct');
+        this.maplewarrior = this.physics.add.sprite(200, 400, 'maplewarriorefct');
         this.maplewarrior.body.setSize(49, 72);
         this.maplewarrior.body.setOffset(107, 300);
         this.maplewarrior.body.setCollideWorldBounds(true);
@@ -55,12 +55,9 @@ class PlayGame extends Phaser.Scene {
 
         // create the player object
         // set the physics collision with the world
-        this.player = this.physics.add.sprite(200, 750, 'playerstanding');
+        this.player = this.physics.add.sprite(200, 510, 'playerstanding');
         this.player.body.setCollideWorldBounds(true);
         this.player.flipX = true;
-
-        this.player.setScale(0.70);
-        this.maplewarrior.setScale(0.70);
 
         this.physics.add.collider(this.player, layer);
         this.physics.add.collider(this.maplewarrior, layer);
@@ -82,8 +79,8 @@ class PlayGame extends Phaser.Scene {
     update(){
         // control the player with left of right keys
         if (this.cursors.left.isDown){
-            this.player.setVelocityX(-150);
-            this.maplewarrior.setVelocityX(-150);
+            this.player.setVelocityX(-170);
+            this.maplewarrior.setVelocityX(-170);
 
             this.player.flipX = false; // turns the sprite to face the left
             this.maplewarrior.flipX = false;
@@ -92,8 +89,8 @@ class PlayGame extends Phaser.Scene {
                 this.player.anims.play('player_walk_anim', true);
             }
         } else if (this.cursors.right.isDown){
-            this.player.setVelocityX(150);
-            this.maplewarrior.setVelocityX(150);
+            this.player.setVelocityX(170);
+            this.maplewarrior.setVelocityX(170);
 
             this.player.flipX = true; // turns the sprite to face the right
             this.maplewarrior.flipX = true;
@@ -114,8 +111,8 @@ class PlayGame extends Phaser.Scene {
 
         // Player can jump while walking any direction by pressing spacebar or 'up' arrow key
         if ((this.cursors.space.isDown || this.cursors.up.isDown) && this.player.body.onFloor()){
-            this.player.setVelocityY(-550);
-            this.maplewarrior.setVelocityY(-550);
+            this.player.setVelocityY(-600);
+            this.maplewarrior.setVelocityY(-600);
 
             // play player jump sound effect
             this.sound.play('JumpSFX');
