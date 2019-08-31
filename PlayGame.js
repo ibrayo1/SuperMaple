@@ -8,7 +8,7 @@ class PlayGame extends Phaser.Scene {
         this.load.tilemapTiledJSON('map', 'assets/maps/super-mario.json');
         this.load.image('tiles1', 'assets/maps/super-mario.png');
 
-        this.load.atlas('player_sprites', 'assets/sprites.png', 'assets/sprites.json');
+        this.load.atlas('player_sprites', 'assets/player_sprites.png', 'assets/player_sprites.json');
 
         this.load.audio('HenesysBGM', 'assets/sounds/HenesysMusic.mp3');
         this.load.audio('JumpSFX', 'assets/sounds/JumpSFX.mp3');
