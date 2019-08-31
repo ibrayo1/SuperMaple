@@ -31,7 +31,7 @@ class PlayGame extends Phaser.Scene {
         layer.setCollisionBetween(27, 28, true);
         layer.setCollision([10, 13, 17, 40]);
 
-        layer.setScale(1.7);
+        layer.setScale(1.95);
 
         // changes the background color of the canvas
         this.cameras.main.setBackgroundColor(0xf2f2f2);
@@ -114,8 +114,8 @@ class PlayGame extends Phaser.Scene {
 
         // Player can jump while walking any direction by pressing spacebar or 'up' arrow key
         if ((this.cursors.space.isDown || this.cursors.up.isDown) && this.player.body.onFloor()){
-            this.player.setVelocityY(-500);
-            this.maplewarrior.setVelocityY(-500);
+            this.player.setVelocityY(-550);
+            this.maplewarrior.setVelocityY(-550);
 
             // play player jump animation and jump sound effect
             this.player.anims.play('player_jump_anim', true);
