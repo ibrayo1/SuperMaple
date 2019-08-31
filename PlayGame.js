@@ -10,7 +10,7 @@ class PlayGame extends Phaser.Scene {
 
         this.load.spritesheet('playerwalking', 'assets/playerwalk.png', {frameWidth: 49, frameHeight: 72});
         this.load.spritesheet('playerstanding', 'assets/playerstanding.png', {frameWidth: 49, frameHeight: 72});
-        this.load.spritesheet('playerjumping', 'assets/playerjump.png', {frameWidth: 49, frameHeight: 71});
+        this.load.spritesheet('playerjumping', 'assets/playerjump.png', {frameWidth: 49, frameHeight: 72});
         
         this.load.spritesheet('maplewarriorefct', 'assets/maplewarrioreffect.png', {frameWidth: 264, frameHeight: 426});
         
@@ -117,9 +117,13 @@ class PlayGame extends Phaser.Scene {
             this.player.setVelocityY(-550);
             this.maplewarrior.setVelocityY(-550);
 
-            // play player jump animation and jump sound effect
-            this.player.anims.play('player_jump_anim', true);
+            // play player jump sound effect
             this.sound.play('JumpSFX');
+        }
+
+        // this ensure that the jump animation play whenever the player is off the ground
+        if (!this.player.body.onFloor()){
+            this.player.anims.play('player_jump_anim', true);
         }
     }
 
