@@ -8,6 +8,8 @@ class PlayGame extends Phaser.Scene {
         this.load.tilemapTiledJSON('map', 'assets/maps/super-mario.json');
         this.load.image('tiles1', 'assets/maps/super-mario.png');
 
+        this.load.spritesheet('coin', 'assets/coin.png', {frameWidth: 25, frameHeight: 24});
+
         this.load.atlas('player_sprites', 'assets/player_sprites.png', 'assets/player_sprites.json');
 
         this.load.audio('HenesysBGM', 'assets/sounds/HenesysMusic.mp3');
@@ -15,25 +17,29 @@ class PlayGame extends Phaser.Scene {
     }
 
     create(){
-        this.cameras.main.setBounds(0, 0, 8988.8, 265);
-        this.physics.world.setBounds(0, 0, 8988.8, 636);
+        this.cameras.main.setBounds(0, 0, 10176, 300);
+        this.physics.world.setBounds(0, 0, 10176, 720);
         
         var map = this.make.tilemap({key: 'map'});
         var tileset = map.addTilesetImage('SuperMarioBros-World1-1', 'tiles1');
-        var layer = map.createStaticLayer('World1', tileset, 0, 0);
+        var layer = map.createDynamicLayer('World1', tileset, 0, 0);
 
         layer.setCollisionBetween(14, 16, true);
         layer.setCollisionBetween(21, 22, true);
         layer.setCollisionBetween(27, 28, true);
         layer.setCollision([10, 13, 17, 40]);
 
-        layer.setScale(2.65);
+        // 11 and 12 are coins and mushrooms respectively
+
+        layer.setScale(3);
 
         // changes the background color of the canvas
         this.cameras.main.setBackgroundColor(0xf2f2f2);
 
         // adds the text, "Playing game...", in the upper left hand color
-        this.add.text(20, 20, "Playing game...", {font: "25px Arial", fill: "yellow"});
+        var score = 0;
+        var score_text = this.add.text(20, 20, "SCORE: " + score, {font: "25px Arial", fill: "yellow"});
+        score_text.scrollFactorX = 0;
 
         // creates all the animations for the sprites
         this.create_animations();
@@ -47,6 +53,29 @@ class PlayGame extends Phaser.Scene {
         this.player.body.setCollideWorldBounds(true);
         this.player.flipX = true;
 
+        //spawn coin
+        layer.forEachTile(tile => {
+            if (tile.index === 11){
+                // get the location of that coin
+                const x = tile.getCenterX();
+                const y = tile.getCenterY();
+
+                // add a coin at that location
+                var coin = this.physics.add.sprite(x, y, 'coin').play('coin_anim');
+
+                // set the display size to 16*3 since we scaled the world by 3
+                coin.displayHeight = 48;
+                coin.displayWidth = 48;
+
+                // set physics collisions
+                coin.body.setCollideWorldBounds(true);
+                this.physics.add.collider(coin, layer);
+
+                // removes the tile at the current place
+                layer.removeTileAt(tile.x, tile.y);
+            }
+        });
+
         this.physics.add.collider(this.player, layer);
 
         // create and play Henesys background music
@@ -56,7 +85,6 @@ class PlayGame extends Phaser.Scene {
         HenBGMMusic.setVolume(0.3);
 
         // this makes the camera follow the player
-        this.cameras.main.setZoom(1.25);
         this.cameras.main.startFollow(this.player, true, 0.08, 0.08);
 
         this.cursors = this.input.keyboard.createCursorKeys();
@@ -67,7 +95,7 @@ class PlayGame extends Phaser.Scene {
     update(){
         // control the player with left of right keys
         if (this.cursors.left.isDown){
-            this.player.setVelocityX(-170);
+            this.player.setVelocityX(-200);
 
             this.player.flipX = false; // turns the sprite to face the left
 
@@ -75,7 +103,7 @@ class PlayGame extends Phaser.Scene {
                 this.player.anims.play('player_walk_anim', true);
             }
         } else if (this.cursors.right.isDown){
-            this.player.setVelocityX(170);
+            this.player.setVelocityX(200);
 
             this.player.flipX = true; // turns the sprite to face the right
 
@@ -94,7 +122,7 @@ class PlayGame extends Phaser.Scene {
 
         // Player can jump while walking any direction by pressing spacebar or 'up' arrow key
         if ((this.cursors.space.isDown || this.cursors.up.isDown) && this.player.body.onFloor()){
-            this.player.setVelocityY(-600);
+            this.player.setVelocityY(-650);
 
             // play player jump sound effect
             this.sound.play('JumpSFX');
@@ -107,6 +135,14 @@ class PlayGame extends Phaser.Scene {
     }
 
     create_animations(){
+
+        // create animation for the coins
+        this.anims.create({
+            key: 'coin_anim',
+            frameRate: 5,
+            frames: this.anims.generateFrameNumbers('coin', {start: 0, end: 3}),
+            repeat: -1
+        });
 
         // player idle/resting/standing animation
         this.anims.create({
