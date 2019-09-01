@@ -17,9 +17,11 @@ class PlayGame extends Phaser.Scene {
     }
 
     create(){
+        // set camera and world bounds
         this.cameras.main.setBounds(0, 0, 10176, 300);
         this.physics.world.setBounds(0, 0, 10176, 720);
-        
+
+        // place map on the canvas
         var map = this.make.tilemap({key: 'map'});
         var tileset = map.addTilesetImage('SuperMarioBros-World1-1', 'tiles1');
         var layer = map.createDynamicLayer('World1', tileset, 0, 0);
@@ -34,7 +36,7 @@ class PlayGame extends Phaser.Scene {
         layer.setScale(3);
 
         // changes the background color of the canvas
-        this.cameras.main.setBackgroundColor(0xf2f2f2);
+        this.cameras.main.setBackgroundColor(0x6888ff);
 
         // adds the text, "Playing game...", in the upper left hand color
         var score = 0;
@@ -63,9 +65,9 @@ class PlayGame extends Phaser.Scene {
                 // add a coin at that location
                 var coin = this.physics.add.sprite(x, y, 'coin').play('coin_anim');
 
-                // set the display size to 16*3 since we scaled the world by 3
-                coin.displayHeight = 48;
-                coin.displayWidth = 48;
+                // set the display size of each coin
+                coin.displayHeight = 32;
+                coin.displayWidth = 32;
 
                 // set physics collisions
                 coin.body.setCollideWorldBounds(true);
