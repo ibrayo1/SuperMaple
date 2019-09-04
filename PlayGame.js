@@ -218,7 +218,7 @@ class PlayGame extends Phaser.Scene {
         // player walk animation
         this.anims.create({
             key: 'player_walk_anim',
-            frameRate: 5,
+            frameRate: 6,
             frames: this.anims.generateFrameNames('player_sprites', {
                 prefix: 'walk1_',
                 suffix: '.png',
