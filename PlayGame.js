@@ -7,6 +7,8 @@ class PlayGame extends Phaser.Scene {
     preload(){
         this.load.tilemapTiledJSON('map', 'assets/maps/super-mario.json');
         this.load.image('tiles1', 'assets/maps/super-mario.png');
+        this.load.image('?-box', 'assets/maps/mysterybox.png');
+        this.load.image('brick', 'assets/maps/brick.png');
 
         this.load.spritesheet('coin', 'assets/coin.png', {frameWidth: 25, frameHeight: 24});
 
@@ -26,13 +28,16 @@ class PlayGame extends Phaser.Scene {
         var tileset = map.addTilesetImage('SuperMarioBros-World1-1', 'tiles1');
         var layer = map.createDynamicLayer('World1', tileset, 0, 0);
 
+        // create collusions with the tiles on the map
         layer.setCollisionBetween(14, 16, true);
         layer.setCollisionBetween(21, 22, true);
         layer.setCollisionBetween(27, 28, true);
         layer.setCollision([10, 13, 17, 40]);
 
+        // 14 are "?"" boxes 15 are brick wals 16 are the platform squares
         // 11 and 12 are coins and mushrooms respectively
 
+        // increase the size of the world map by x3
         layer.setScale(3);
 
         // changes the background color of the canvas
@@ -46,16 +51,51 @@ class PlayGame extends Phaser.Scene {
         // creates all the animations for the sprites
         this.create_animations();
 
-        // create the jump sound effect
-        this.sound.add('JumpSFX');
-
         // create the player object
         // set the physics collision with the world
         this.player = this.physics.add.sprite(200, 510, 'player_sprites', 'stand1_0.png');
+        this.player.body.setSize(30, 69);
         this.player.body.setCollideWorldBounds(true);
         this.player.flipX = true;
 
-        //spawn coin
+        // add physics collisions with the player
+        this.physics.add.collider(this.player, layer);
+
+        layer.forEachTile( tile => {
+
+            if(tile.index == 14 || tile.index == 15){
+
+                const x = tile.getCenterX();
+                const y = tile.getCenterY();
+
+                if(tile.index == 14){
+                    var bounceblock = this.physics.add.image(x, y, '?-box').setImmovable(true);
+                } else {
+                    var bounceblock = this.physics.add.image(x, y, 'brick').setImmovable(true);
+                }
+
+                bounceblock.body.allowGravity = false;
+                bounceblock.body.moves = false;
+                bounceblock.enableBody = true;
+                bounceblock.setScale(3);
+                
+
+                this.tweens.add({
+                    targets: bounceblock,
+                    y: tile.getCenterY() - 16,
+                    duration: 500,
+                    ease: 'Linear',
+                    yoyo: true
+                });
+
+                this.physics.add.collider(this.player, bounceblock);
+
+                layer.removeTileAt(tile.x, tile.y);
+            }
+
+        });
+
+                //spawn coins around the map
         layer.forEachTile(tile => {
             if (tile.index === 11){
                 // get the location of that coin
@@ -78,13 +118,14 @@ class PlayGame extends Phaser.Scene {
             }
         });
 
-        this.physics.add.collider(this.player, layer);
-
         // create and play Henesys background music
         var HenBGMMusic = this.sound.add('HenesysBGM');
         HenBGMMusic.play();
         HenBGMMusic.setLoop(true);
         HenBGMMusic.setVolume(0.3);
+
+        // create the jump sound effect
+        this.sound.add('JumpSFX');
 
         // this makes the camera follow the player
         this.cameras.main.startFollow(this.player, true, 0.08, 0.08);
@@ -92,6 +133,7 @@ class PlayGame extends Phaser.Scene {
         this.cursors = this.input.keyboard.createCursorKeys();
         this.attackButton = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.X);
 
+        this.count = 1;
     }
 
     update(){
@@ -101,7 +143,7 @@ class PlayGame extends Phaser.Scene {
 
             this.player.flipX = false; // turns the sprite to face the left
 
-            if(this.player.body.onFloor()){
+            if(this.player.body.velocity.y == 0){
                 this.player.anims.play('player_walk_anim', true);
             }
         } else if (this.cursors.right.isDown){
@@ -109,30 +151,37 @@ class PlayGame extends Phaser.Scene {
 
             this.player.flipX = true; // turns the sprite to face the right
 
-            if (this.player.body.onFloor()){
+            if (this.player.body.velocity.y == 0){
                 this.player.anims.play('player_walk_anim', true);
             }
         } else {
             // if no keys are pressed, the player keeps still
             this.player.setVelocityX(0);
             // Only show the idle animation if the player is footed
-            if(this.player.body.onFloor()){
+            if(this.player.body.velocity.y == 0 && this.player.body.velocity.x == 0){
                 this.player.anims.play('player_stand_anim', true);
             }
 
         }
 
         // Player can jump while walking any direction by pressing spacebar or 'up' arrow key
-        if ((this.cursors.space.isDown || this.cursors.up.isDown) && this.player.body.onFloor()){
+        if ((this.cursors.space.isDown || this.cursors.up.isDown) && this.player.body.velocity.y == 0 && this.count == 1){
             this.player.setVelocityY(-650);
 
             // play player jump sound effect
             this.sound.play('JumpSFX');
+
+            this.count = 2;
+            console.log(this.count);
+        
         }
 
-        // this ensure that the jump animation play whenever the player is off the ground
-        if (!this.player.body.onFloor()){
+        // this ensures that the jump animation plays whenever the vertical velocity is not 0
+        if (this.player.body.velocity.y != 0){
             this.player.anims.play('player_jump_anim', true);
+        } else {
+            this.count = 1;
+            console.log(this.count);
         }
     }
 
