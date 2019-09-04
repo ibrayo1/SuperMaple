@@ -5,15 +5,19 @@ class PlayGame extends Phaser.Scene {
 
     // load up all the require sprites/audio/images/etc. required
     preload(){
+        // load up the map and other image we need for the map layer
         this.load.tilemapTiledJSON('map', 'assets/maps/super-mario.json');
         this.load.image('tiles1', 'assets/maps/super-mario.png');
         this.load.image('?-box', 'assets/maps/mysterybox.png');
         this.load.image('brick', 'assets/maps/brick.png');
 
+        // load up the spritesheet for the coin
         this.load.spritesheet('coin', 'assets/coin.png', {frameWidth: 25, frameHeight: 24});
 
+        // load up the atlas for the player sprite
         this.load.atlas('player_sprites', 'assets/player_sprites.png', 'assets/player_sprites.json');
 
+        // load up audio for the bgm of the map and the jump effect audio
         this.load.audio('HenesysBGM', 'assets/sounds/HenesysMusic.mp3');
         this.load.audio('JumpSFX', 'assets/sounds/JumpSFX.mp3');
     }
@@ -55,7 +59,7 @@ class PlayGame extends Phaser.Scene {
         // set the physics collision with the world
         this.player = this.physics.add.sprite(200, 510, 'player_sprites', 'stand1_0.png');
         this.player.body.setSize(35, 69);
-        this.player.body.setCollideWorldBounds(true);
+        this.player.body.setCollideWorldBounds(false);
         this.player.flipX = true;
 
         // add physics collisions with the player
@@ -63,23 +67,29 @@ class PlayGame extends Phaser.Scene {
 
         layer.forEachTile( tile => {
 
+            // at tile index 14 and 15 switch them out for a sprite tile
             if(tile.index == 14 || tile.index == 15){
 
+                // get the origin of the tile on the map
                 const x = tile.getCenterX();
                 const y = tile.getCenterY();
 
+                // switch the tile with its respective sprite tile and set it immovable
                 if(tile.index == 14){
                     var bounceblock = this.physics.add.image(x, y, '?-box').setImmovable(true);
                 } else {
                     var bounceblock = this.physics.add.image(x, y, 'brick').setImmovable(true);
                 }
 
+                // make it so that the sprite is not effected by gravity
+                // and enable it to have a physics body and increase the size of it by 3
                 bounceblock.body.allowGravity = false;
                 bounceblock.body.moves = false;
                 bounceblock.enableBody = true;
                 bounceblock.setScale(3);
-                
 
+                // add a tween animation for every bounce block
+                // pause it so that the tween doesnt start right away
                 var tween = this.tweens.add({
                     targets: bounceblock,
                     y: tile.getCenterY() - 8,
@@ -89,19 +99,22 @@ class PlayGame extends Phaser.Scene {
                     paused: true
                 });
 
+                // add a collider callback between the player and the tile
                 this.physics.add.collider(this.player, bounceblock, bounceTile, null, this);
 
+                // callback function which enables the bouncing effet on the blocks
                 function bounceTile(){
                     if(bounceblock.body.touching.down)
                         tween.play();
                 }
 
+                // finally remove the static tile from the origin
                 layer.removeTileAt(tile.x, tile.y);
             }
 
         });
 
-                //spawn coins around the map
+        //spawn coins around the map
         layer.forEachTile(tile => {
             if (tile.index === 11){
                 // get the location of that coin
