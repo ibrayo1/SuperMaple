@@ -54,7 +54,7 @@ class PlayGame extends Phaser.Scene {
         // create the player object
         // set the physics collision with the world
         this.player = this.physics.add.sprite(200, 510, 'player_sprites', 'stand1_0.png');
-        this.player.body.setSize(30, 69);
+        this.player.body.setSize(35, 69);
         this.player.body.setCollideWorldBounds(true);
         this.player.flipX = true;
 
@@ -80,15 +80,21 @@ class PlayGame extends Phaser.Scene {
                 bounceblock.setScale(3);
                 
 
-                this.tweens.add({
+                var tween = this.tweens.add({
                     targets: bounceblock,
-                    y: tile.getCenterY() - 16,
-                    duration: 500,
+                    y: tile.getCenterY() - 8,
+                    duration: 100,
                     ease: 'Linear',
-                    yoyo: true
+                    yoyo: true,
+                    paused: true
                 });
 
-                this.physics.add.collider(this.player, bounceblock);
+                this.physics.add.collider(this.player, bounceblock, bounceTile, null, this);
+
+                function bounceTile(){
+                    if(bounceblock.body.touching.down)
+                        tween.play();
+                }
 
                 layer.removeTileAt(tile.x, tile.y);
             }
