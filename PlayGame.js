@@ -217,7 +217,7 @@ class PlayGame extends Phaser.Scene {
         // player idle/resting/standing animation
         this.anims.create({
             key: 'player_stand_anim',
-            frameRate: 3,
+            frameRate: 2,
             frames: this.anims.generateFrameNames('player_sprites', {
                 prefix: 'stand1_',
                 suffix: '.png',
