@@ -5,137 +5,40 @@ class PlayGame extends Phaser.Scene {
 
     // load up all the require sprites/audio/images/etc. required
     preload(){
-        // load up the map and other image we need for the map layer
-        this.load.tilemapTiledJSON('map', 'assets/maps/super-mario.json');
-        this.load.image('tiles1', 'assets/maps/super-mario.png');
-        this.load.image('?-box', 'assets/maps/mysterybox.png');
-        this.load.image('brick', 'assets/maps/brick.png');
-
-        // load up the spritesheet for the coin
-        this.load.spritesheet('coin', 'assets/coin.png', {frameWidth: 25, frameHeight: 24});
-
-        // load up the atlas for the player sprite
-        this.load.atlas('player_sprites', 'assets/player_sprites.png', 'assets/player_sprites.json');
-
-        // load up audio for the bgm of the map and the jump effect audio
+        this.load.spritesheet('playerwalking', 'assets/playerwalk.png', {frameWidth: 49, frameHeight: 72});
+        this.load.spritesheet('playerstanding', 'assets/playerstanding.png', {frameWidth: 49, frameHeight: 72});
+        this.load.spritesheet('playerjumping', 'assets/playerjump.png', {frameWidth: 49, frameHeight: 71});
+        this.load.spritesheet('maplewarriorefct', 'assets/maplewarrioreffect.png', {frameWidth: 264, frameHeight: 426});
         this.load.audio('HenesysBGM', 'assets/sounds/HenesysMusic.mp3');
         this.load.audio('JumpSFX', 'assets/sounds/JumpSFX.mp3');
     }
 
     create(){
-        // set camera and world bounds
-        this.cameras.main.setBounds(0, 0, 10176, 300);
-        this.physics.world.setBounds(0, 0, 10176, 720);
-
-        // place map on the canvas
-        var map = this.make.tilemap({key: 'map'});
-        var tileset = map.addTilesetImage('SuperMarioBros-World1-1', 'tiles1');
-        var layer = map.createDynamicLayer('World1', tileset, 0, 0);
-
-        // create collusions with the tiles on the map
-        layer.setCollisionBetween(14, 16, true);
-        layer.setCollisionBetween(21, 22, true);
-        layer.setCollisionBetween(27, 28, true);
-        layer.setCollision([10, 13, 17, 40]);
-
-        // 14 are "?"" boxes 15 are brick wals 16 are the platform squares
-        // 11 and 12 are coins and mushrooms respectively
-
-        // increase the size of the world map by x3
-        layer.setScale(3);
-
         // changes the background color of the canvas
-        this.cameras.main.setBackgroundColor(0x6888ff);
+        this.cameras.main.setBackgroundColor(0xf2f2f2);
 
         // adds the text, "Playing game...", in the upper left hand color
-        var score = 0;
-        var score_text = this.add.text(20, 20, "SCORE: " + score, {font: "25px Arial", fill: "yellow"});
-        score_text.scrollFactorX = 0;
+        this.add.text(20, 20, "Playing game...", {font: "25px Arial", fill: "yellow"});
 
         // creates all the animations for the sprites
         this.create_animations();
 
+        // create the jump sound effect
+        this.sound.add('JumpSFX');
+
+        // create maple warrior skll sprite
+        this.maplewarrior = this.physics.add.sprite(200, 750, 'maplewarriorefct');
+        this.maplewarrior.body.setSize(49, 72);
+        this.maplewarrior.body.setOffset(107, 300);
+        this.maplewarrior.body.setCollideWorldBounds(true);
+        this.maplewarrior.flipX = true;
+        this.maplewarrior.anims.play('maple_warrior_anim');
+
         // create the player object
         // set the physics collision with the world
-        this.player = this.physics.add.sprite(200, 510, 'player_sprites', 'stand1_0.png');
-        this.player.body.setSize(35, 69);
-        this.player.body.setCollideWorldBounds(false);
+        this.player = this.physics.add.sprite(200, 750, 'playerstanding');
+        this.player.body.setCollideWorldBounds(true);
         this.player.flipX = true;
-
-        // add physics collisions with the player
-        this.physics.add.collider(this.player, layer);
-
-        layer.forEachTile( tile => {
-
-            // at tile index 14 and 15 switch them out for a sprite tile
-            if(tile.index == 14 || tile.index == 15){
-
-                // get the origin of the tile on the map
-                const x = tile.getCenterX();
-                const y = tile.getCenterY();
-
-                // switch the tile with its respective sprite tile and set it immovable
-                if(tile.index == 14){
-                    var bounceblock = this.physics.add.image(x, y, '?-box').setImmovable(true);
-                } else {
-                    var bounceblock = this.physics.add.image(x, y, 'brick').setImmovable(true);
-                }
-
-                // make it so that the sprite is not effected by gravity
-                // and enable it to have a physics body and increase the size of it by 3
-                bounceblock.body.allowGravity = false;
-                bounceblock.body.moves = false;
-                bounceblock.enableBody = true;
-                bounceblock.setScale(3);
-
-                // add a tween animation for every bounce block
-                // pause it so that the tween doesnt start right away
-                var tween = this.tweens.add({
-                    targets: bounceblock,
-                    y: tile.getCenterY() - 8,
-                    duration: 100,
-                    ease: 'Linear',
-                    yoyo: true,
-                    paused: true
-                });
-
-                // add a collider callback between the player and the tile
-                this.physics.add.collider(this.player, bounceblock, bounceTile, null, this);
-
-                // callback function which enables the bouncing effet on the blocks
-                function bounceTile(){
-                    if(bounceblock.body.touching.down)
-                        tween.play();
-                }
-
-                // finally remove the static tile from the origin
-                layer.removeTileAt(tile.x, tile.y);
-            }
-
-        });
-
-        //spawn coins around the map
-        layer.forEachTile(tile => {
-            if (tile.index === 11){
-                // get the location of that coin
-                const x = tile.getCenterX();
-                const y = tile.getCenterY();
-
-                // add a coin at that location
-                var coin = this.physics.add.sprite(x, y, 'coin').play('coin_anim');
-
-                // set the display size of each coin
-                coin.displayHeight = 32;
-                coin.displayWidth = 32;
-
-                // set physics collisions
-                coin.body.setCollideWorldBounds(true);
-                this.physics.add.collider(coin, layer);
-
-                // removes the tile at the current place
-                layer.removeTileAt(tile.x, tile.y);
-            }
-        });
 
         // create and play Henesys background music
         var HenBGMMusic = this.sound.add('HenesysBGM');
@@ -143,117 +46,85 @@ class PlayGame extends Phaser.Scene {
         HenBGMMusic.setLoop(true);
         HenBGMMusic.setVolume(0.3);
 
-        // create the jump sound effect
-        this.sound.add('JumpSFX');
-
         // this makes the camera follow the player
-        this.cameras.main.startFollow(this.player, true, 0.08, 0.08);
+        //this.cameras.main.startFollow(this.player, true, 0.08, 0.08);
 
         this.cursors = this.input.keyboard.createCursorKeys();
-        this.attackButton = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.X);
 
-        this.count = 1;
     }
 
     update(){
         // control the player with left of right keys
         if (this.cursors.left.isDown){
-            this.player.setVelocityX(-200);
+            this.player.setVelocityX(-150);
+            this.maplewarrior.setVelocityX(-150);
 
             this.player.flipX = false; // turns the sprite to face the left
+            this.maplewarrior.flipX = false;
 
-            if(this.player.body.velocity.y == 0){
+            if(this.player.body.onFloor()){
                 this.player.anims.play('player_walk_anim', true);
             }
         } else if (this.cursors.right.isDown){
-            this.player.setVelocityX(200);
+            this.player.setVelocityX(150);
+            this.maplewarrior.setVelocityX(150);
 
             this.player.flipX = true; // turns the sprite to face the right
+            this.maplewarrior.flipX = true;
 
-            if (this.player.body.velocity.y == 0){
+            if (this.player.body.onFloor()){
                 this.player.anims.play('player_walk_anim', true);
             }
         } else {
             // if no keys are pressed, the player keeps still
             this.player.setVelocityX(0);
+            this.maplewarrior.setVelocityX(0);
             // Only show the idle animation if the player is footed
-            if(this.player.body.velocity.y == 0 && this.player.body.velocity.x == 0){
+            if(this.player.body.onFloor()){
                 this.player.anims.play('player_stand_anim', true);
             }
 
         }
 
         // Player can jump while walking any direction by pressing spacebar or 'up' arrow key
-        if ((this.cursors.space.isDown || this.cursors.up.isDown) && this.player.body.velocity.y == 0 && this.count == 1){
-            this.player.setVelocityY(-650);
-
-            // play player jump sound effect
-            this.sound.play('JumpSFX');
-
-            this.count = 2;
-            console.log(this.count);
-        
-        }
-
-        // this ensures that the jump animation plays whenever the vertical velocity is not 0
-        if (this.player.body.velocity.y != 0){
+        if ((this.cursors.space.isDown || this.cursors.up.isDown) && this.player.body.onFloor()){
+            this.player.setVelocityY(-390);
+            this.maplewarrior.setVelocityY(-390);
             this.player.anims.play('player_jump_anim', true);
-        } else {
-            this.count = 1;
-            console.log(this.count);
         }
     }
 
     create_animations(){
-
-        // create animation for the coins
+        // player walk animation
         this.anims.create({
-            key: 'coin_anim',
-            frameRate: 5,
-            frames: this.anims.generateFrameNumbers('coin', {start: 0, end: 3}),
+            key: 'player_walk_anim',
+            frames: this.anims.generateFrameNumbers('playerwalking', {start: 0, end: 3}),
+            frameRate: 8,
             repeat: -1
         });
 
         // player idle/resting/standing animation
         this.anims.create({
             key: 'player_stand_anim',
-            frameRate: 2,
-            frames: this.anims.generateFrameNames('player_sprites', {
-                prefix: 'stand1_',
-                suffix: '.png',
-                start: 0,
-                end: 3,
-                zeroPad: 0
-            }),
-            repeat: -1
-        });
-
-        // player walk animation
-        this.anims.create({
-            key: 'player_walk_anim',
-            frameRate: 6,
-            frames: this.anims.generateFrameNames('player_sprites', {
-                prefix: 'walk1_',
-                suffix: '.png',
-                start: 0,
-                end: 3,
-                zeroPad: 0
-            }),
+            frames: this.anims.generateFrameNumbers('playerstanding', {start: 0, end: 3}),
+            frameRate: 3,
             repeat: -1
         });
 
         // player jump animation
         this.anims.create({
             key: 'player_jump_anim',
-            frameRate: 2,
-            frames: this.anims.generateFrameNames('player_sprites', {
-                prefix: 'jump_',
-                suffix: '.png',
-                start: 0,
-                end: 1,
-                zeroPad: 0
-            }),
-            repeat: -1
+            frames: this.anims.generateFrameNumbers('playerjumping', {start: 0, end: 1}),
+            frameRate: 3,
+            repeat: -1 
+        });
+
+        // maple warrior skill animation
+        this.anims.create({
+            key: 'maple_warrior_anim',
+            frameRate: 15,
+            repeat: -1, //remove this line for not repeating the animation
+            frames: this.anims.generateFrameNumbers('maplewarriorefct', { start: 0, end: 22 })
         });
     }
 }
