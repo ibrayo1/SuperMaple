@@ -15,7 +15,7 @@ app.get('/', function(req, res){
     res.render('index');
 });
 
-// Start the server, listening on port on env
+// Start the server, listening on port on en
 server.listen(PORT, () => {
     console.log(`Listening to requests on ${server.address().port}`);
 });
