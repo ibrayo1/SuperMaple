@@ -17,5 +17,5 @@ app.get('/', function(req, res){
 
 // Start the server, listening on port 3000
 server.listen(PORT, () => {
-    console.log(`Listening to requests on ${server.address().port}`);
+    console.log(`Listening to rquests on ${server.address().port}`);
 });
