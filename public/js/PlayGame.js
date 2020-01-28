@@ -202,6 +202,11 @@ class PlayGame extends Phaser.Scene {
             this.count = 1;
             console.log(this.count);
         }
+
+        // game over
+        if(this.player.y > game.config.height){
+            this.scene.restart();
+        }
     }
 
     create_animations(){
