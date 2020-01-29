@@ -268,6 +268,14 @@ class PlayGame extends Phaser.Scene {
             repeat: -1
         });
 
+        // create animation for explosion
+        this.anims.create({
+           key: 'explosion_anim',
+           frameRate: 10,
+           frames: this.anims.generateFrameNumbers('explosion', {start: 0, end: 12}),
+           repeat: -1
+        });
+
         // player idle/resting/standing animation
         this.anims.create({
             key: 'player_stand_anim',
