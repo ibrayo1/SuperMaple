@@ -17,6 +17,9 @@ class PlayGame extends Phaser.Scene {
         // load up the atlas for the player sprite
         this.load.atlas('player_sprites', 'assets/player_sprites.png', 'assets/player_sprites.json');
 
+        // load up te atlas for the enemy sprites
+        this.load.atlas('shroom_sprite', 'assets/enemies/shroom.png', 'assets/enemies/shroom.json');
+
         // load up audio for the bgm of the map and the jump effect audio
         this.load.audio('HenesysBGM', 'assets/sounds/HenesysMusic.mp3');
         this.load.audio('JumpSFX', 'assets/sounds/JumpSFX.mp3');
@@ -65,6 +68,14 @@ class PlayGame extends Phaser.Scene {
 
         // add physics collisions with the player
         this.physics.add.collider(this.player, layer);
+
+        // create enemy
+        this.shroom = this.physics.add.sprite(200, 510, 'shroom_sprite', 'shroom_1.png');
+        this.shroom.body.setCollideWorldBounds(false);
+        this.shroom.anims.play('shroom_walk_anim', true);
+       
+        // add physics collisions with the shroom
+        this.physics.add.collider(this.shroom, layer);
 
         layer.forEachTile( tile => {
 
@@ -313,6 +324,62 @@ class PlayGame extends Phaser.Scene {
                 suffix: '.png',
                 start: 0,
                 end: 1,
+                zeroPad: 0
+            }),
+            repeat: -1
+        });
+
+        // shroom enemy idle animation
+        this.anims.create({
+            key: 'shroom_idle_anim',
+            frameRate: 10,
+            frames: this.anims.generateFrameNames('shroom_sprite', {
+                prefix: 'shroom_',
+                suffix: '.png',
+                start: 1,
+                end: 3,
+                zeroPad: 0
+            }),
+            repeat: -1
+        });
+  
+        // shroom enemy walk animation
+        this.anims.create({
+            key: 'shroom_walk_anim',
+            frameRate: 7,
+            frames: this.anims.generateFrameNames('shroom_sprite', {
+                prefix: 'shroom_',
+                suffix: '.png',
+                start: 4,
+                end: 7,
+                zeroPad: 0
+            }),
+            repeat: -1
+        });
+
+        // shroom enemy hit animation
+        this.anims.create({
+            key: 'shroom_hit_anim',
+            frameRate: 3,
+            frames: this.anims.generateFrameNames('shroom_sprite', {
+                prefix: 'shroom_',
+                suffix: '.png',
+                start: 8,
+                end: 8,
+                zeroPad: 0
+            }),
+            repeat: -1
+        });
+
+        // shroom enemy death animation
+        this.anims.create({
+            key: 'shroom_death_anim',
+            frameRate: 6,
+            frames: this.anims.generateFrameNames('shroom_sprite', {
+                prefix: 'shroom_',
+                suffix: '.png',
+                start: 9,
+                end: 12,
                 zeroPad: 0
             }),
             repeat: -1
