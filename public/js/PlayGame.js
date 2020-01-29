@@ -126,8 +126,10 @@ class PlayGame extends Phaser.Scene {
                         paused: true
                     });
 
+                    // add collider callback between player and bounce block with coin tween
                     this.physics.add.collider(this.player, bounceblock, bounceTile, null, this);
 
+                    // callback function which gets activated with bounceblock is collided with
                     function bounceTile(){
                         if(bounceblock.body.touching.down){
                             tween.play();
