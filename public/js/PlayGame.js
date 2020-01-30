@@ -10,6 +10,7 @@ class PlayGame extends Phaser.Scene {
         this.load.image('tiles1', 'assets/maps/super-mario.png');
         this.load.image('?-box', 'assets/maps/mysterybox.png');
         this.load.image('brick', 'assets/maps/brick.png');
+        this.load.image('emptybox', 'assets/maps/emptyblock.png');
 
         // load up the spritesheet for the coin
         this.load.spritesheet('coin', 'assets/coin.png', {frameWidth: 25, frameHeight: 24});
@@ -146,7 +147,6 @@ class PlayGame extends Phaser.Scene {
                     // and enable it to have a physics body and increase the size of it by 3
                     bounceblock.body.allowGravity = false;
                     bounceblock.enableBody = true;
-                    bounceblock.setScale(3);
 
                     // add a tween animation for every bounce block
                     // pause it so that the tween doesnt start right away
@@ -160,16 +160,28 @@ class PlayGame extends Phaser.Scene {
                     });
 
                     // add collider callback between player and bounce block with coin tween
-                    this.physics.add.collider(this.player, bounceblock, bounceTile, null, this);
+                    let colliderActivated = true;
+                    this.physics.add.collider(this.player, bounceblock, bounceTile,()=>{
+                        return colliderActivated;
+                      }, this);
 
                     // callback function which gets activated with bounceblock is collided with
                     function bounceTile(){
                         if(bounceblock.body.touching.down){
+                            // play the tweens for the mysterybox
                             tween.play();
                             cointween.play();
+
+                            // update the score because this mysterybox contains a coin
                             this.sound.play('CoinSFX');
                             score += 100;
                             score_text.setText('SCORE: ' + score);
+
+                            // change block to empty and make it so player can't get 
+                            // any more coins from it
+                            bounceblock.setTexture('emptybox');
+                            this.physics.add.collider(this.player, bounceblock);
+                            colliderActivated = false;
                         }
                     }
 
@@ -190,7 +202,6 @@ class PlayGame extends Phaser.Scene {
                     // and enable it to have a physics body and increase the size of it by 3
                     bounceblock.body.allowGravity = false;
                     bounceblock.enableBody = true;
-                    bounceblock.setScale(3);
 
                     // add a tween animation for every bounce block
                     // pause it so that the tween doesnt start right away
@@ -208,8 +219,9 @@ class PlayGame extends Phaser.Scene {
 
                     // callback function which enables the bouncing effet on the blocks
                     function bounceTile(){
-                        if(bounceblock.body.touching.down)
+                        if(bounceblock.body.touching.down ){
                             tween.play();
+                        }
                     }
                 }
 
