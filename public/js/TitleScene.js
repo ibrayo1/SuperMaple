@@ -6,6 +6,7 @@ class TitleScene extends Phaser.Scene {
     preload() {
         this.load.image('playBtn', 'assets/playbutton.png');
         this.load.image('titlebackground', 'assets/titlebackground.png');
+        this.load.image('super_maple_title', 'assets/super_maple_title.png');
         this.load.audio('bgm', 'assets/sounds/titleScreenMusic.mp3');
     }
 
@@ -19,6 +20,9 @@ class TitleScene extends Phaser.Scene {
         var titleMusic = this.sound.add('bgm');
         titleMusic.play();
         titleMusic.setLoop(true);
+
+        // add the title image
+        this.titleImage = this.add.image(game.config.width/2, 250, 'super_maple_title');
 
         // create the play button and set the interactivity
         var playBtn = this.add.image(500, 400, 'playBtn').setDisplaySize(152,65);
