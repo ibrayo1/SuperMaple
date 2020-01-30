@@ -13,7 +13,7 @@ class PlayGame extends Phaser.Scene {
         this.load.image('emptybox', 'assets/maps/emptyblock.png');
 
         // load up the spritesheet for the coin
-        this.load.spritesheet('coin', 'assets/coin.png', {frameWidth: 25, frameHeight: 24});
+        this.load.spritesheet('coin', 'assets/maps/coin.png', {frameWidth: 25, frameHeight: 24});
 
         // load up the atlas for the player sprite
         this.load.atlas('player_sprites', 'assets/player_sprites.png', 'assets/player_sprites.json');
