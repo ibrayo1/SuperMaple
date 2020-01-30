@@ -69,13 +69,24 @@ class PlayGame extends Phaser.Scene {
         // add physics collisions with the player
         this.physics.add.collider(this.player, layer);
 
-        // create enemy
-        this.shroom = this.physics.add.sprite(200, 510, 'shroom_sprite', 'shroom_1.png');
-        this.shroom.body.setCollideWorldBounds(false);
-        this.shroom.anims.play('shroom_walk_anim', true);
-       
-        // add physics collisions with the shroom
-        this.physics.add.collider(this.shroom, layer);
+        // add enemies to the feild
+        layer.forEachTile( tile => {
+            if(tile.index == 41){
+                const shroom_x = tile.getCenterX();
+                const shroom_y = tile.getCenterY();
+
+                // add shroom enemy to the map
+                var shroom_enemy = this.physics.add.sprite(shroom_x, shroom_y, 'shroom_sprite', 'shroom_1.png');
+                shroom_enemy.body.setCollideWorldBounds(false);
+                shroom_enemy.anims.play('shroom_walk_anim');
+
+                // add collision between shroom enemy and map
+                this.physics.add.collider(shroom_enemy, layer);
+
+                // put tile 1 to where tile.index is 41 to hide the placeholder for enemy
+                layer.putTileAt(1, tile.x, tile.y);
+            }
+        });
 
         layer.forEachTile( tile => {
 
