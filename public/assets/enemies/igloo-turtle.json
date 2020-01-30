@@ -1,1 +1,86 @@
-{"frames":[{"filename":"sprite1","frame":{"x":6,"y":8,"w":65,"h":37},"rotated":false,"trimmed":false,"spriteSourceSize":{"x":0,"y":0,"w":65,"h":37},"sourceSize":{"w":65,"h":37}},{"filename":"sprite2","frame":{"x":6,"y":72,"w":65,"h":37},"rotated":false,"trimmed":false,"spriteSourceSize":{"x":0,"y":0,"w":65,"h":37},"sourceSize":{"w":65,"h":37}},{"filename":"sprite3","frame":{"x":82,"y":72,"w":66,"h":37},"rotated":false,"trimmed":false,"spriteSourceSize":{"x":0,"y":0,"w":66,"h":37},"sourceSize":{"w":66,"h":37}},{"filename":"sprite4","frame":{"x":160,"y":73,"w":63,"h":37},"rotated":false,"trimmed":false,"spriteSourceSize":{"x":0,"y":0,"w":63,"h":37},"sourceSize":{"w":63,"h":37}},{"filename":"sprite5","frame":{"x":237,"y":73,"w":62,"h":37},"rotated":false,"trimmed":false,"spriteSourceSize":{"x":0,"y":0,"w":62,"h":37},"sourceSize":{"w":62,"h":37}},{"filename":"sprite6","frame":{"x":8,"y":129,"w":65,"h":47},"rotated":false,"trimmed":false,"spriteSourceSize":{"x":0,"y":0,"w":65,"h":47},"sourceSize":{"w":65,"h":47}},{"filename":"sprite7","frame":{"x":7,"y":189,"w":65,"h":47},"rotated":false,"trimmed":false,"spriteSourceSize":{"x":0,"y":0,"w":65,"h":47},"sourceSize":{"w":65,"h":47}},{"filename":"sprite8","frame":{"x":87,"y":199,"w":61,"h":37},"rotated":false,"trimmed":false,"spriteSourceSize":{"x":0,"y":0,"w":61,"h":37},"sourceSize":{"w":61,"h":37}},{"filename":"sprite9","frame":{"x":168,"y":206,"w":63,"h":30},"rotated":false,"trimmed":false,"spriteSourceSize":{"x":0,"y":0,"w":63,"h":30},"sourceSize":{"w":63,"h":30}},{"filename":"sprite10","frame":{"x":247,"y":207,"w":65,"h":29},"rotated":false,"trimmed":false,"spriteSourceSize":{"x":0,"y":0,"w":65,"h":29},"sourceSize":{"w":65,"h":29}},{"filename":"sprite11","frame":{"x":328,"y":209,"w":65,"h":28},"rotated":false,"trimmed":false,"spriteSourceSize":{"x":0,"y":0,"w":65,"h":28},"sourceSize":{"w":65,"h":28}}],"meta":{"app":"https://www.leshylabs.com/apps/sstool/","version":"Leshy SpriteSheet Tool v0.8.4","image":"igloo-turtle.png","size":{"w":408,"h":249},"scale":1}}
+{
+"frames":{
+    "igloo_turtle_1.png": {
+        "frame":{"x":6,"y":8,"w":65,"h":37},
+        "rotated":false,
+        "trimmed":false,
+        "spriteSourceSize":{"x":0,"y":0,"w":65,"h":37},
+        "sourceSize":{"w":65,"h":37}
+    },
+    "igloo_turtle_2.png": {
+        "frame":{"x":6,"y":72,"w":65,"h":37},
+        "rotated":false,
+        "trimmed":false,
+        "spriteSourceSize":{"x":0,"y":0,"w":65,"h":37},
+        "sourceSize":{"w":65,"h":37}
+    },
+    "igloo_turtle_3.png": {
+        "frame":{"x":82,"y":72,"w":66,"h":37},
+        "rotated":false,
+        "trimmed":false,
+        "spriteSourceSize":{"x":0,"y":0,"w":66,"h":37},
+        "sourceSize":{"w":66,"h":37}
+    },
+    "igloo_turtle_4.png": {
+        "frame":{"x":160,"y":73,"w":63,"h":37},
+        "rotated":false,
+        "trimmed":false,
+        "spriteSourceSize":{"x":0,"y":0,"w":63,"h":37},
+        "sourceSize":{"w":63,"h":37}
+    },
+    "igloo_turtle_5.png": {
+        "frame":{"x":237,"y":73,"w":62,"h":37},
+        "rotated":false,
+        "trimmed":false,
+        "spriteSourceSize":{"x":0,"y":0,"w":62,"h":37},
+        "sourceSize":{"w":62,"h":37}
+    },
+    "igloo_turtle_6.png": {
+        "frame":{"x":8,"y":129,"w":65,"h":47},
+        "rotated":false,
+        "trimmed":false,
+        "spriteSourceSize":{"x":0,"y":0,"w":65,"h":47},
+        "sourceSize":{"w":65,"h":47}
+    },
+    "igloo_turtle_7.png": {
+        "frame":{"x":7,"y":189,"w":65,"h":47},
+        "rotated":false,
+        "trimmed":false,
+        "spriteSourceSize":{"x":0,"y":0,"w":65,"h":47},
+        "sourceSize":{"w":65,"h":47}
+    },
+    "igloo_turtle_8.png": {
+        "frame":{"x":87,"y":199,"w":61,"h":37},
+        "rotated":false,
+        "trimmed":false,
+        "spriteSourceSize":{"x":0,"y":0,"w":61,"h":37},
+        "sourceSize":{"w":61,"h":37}
+    },
+    "igloo_turtle_9.png": {
+        "frame":{"x":168,"y":206,"w":63,"h":30},
+        "rotated":false,
+        "trimmed":false,
+        "spriteSourceSize":{"x":0,"y":0,"w":63,"h":30},
+        "sourceSize":{"w":63,"h":30}
+    },
+    "igloo_turtle_10.png": {
+        "frame":{"x":247,"y":207,"w":65,"h":29},
+        "rotated":false,
+        "trimmed":false,
+        "spriteSourceSize":{"x":0,"y":0,"w":65,"h":29},
+        "sourceSize":{"w":65,"h":29}
+    },
+    "igloo_turtle_11.png": {
+        "frame":{"x":328,"y":209,"w":65,"h":28},
+        "rotated":false,
+        "trimmed":false,
+        "spriteSourceSize":{"x":0,"y":0,"w":65,"h":28},
+        "sourceSize":{"w":65,"h":28}
+    }
+},
+"meta":{
+    "image":"igloo-turtle.png",
+    "size":{"w":408,"h":249},
+    "scale":1
+}
+}

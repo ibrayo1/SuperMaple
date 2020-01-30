@@ -19,6 +19,7 @@ class PlayGame extends Phaser.Scene {
 
         // load up te atlas for the enemy sprites
         this.load.atlas('shroom_sprite', 'assets/enemies/shroom.png', 'assets/enemies/shroom.json');
+        this.load.atlas('igloo_turtle', 'assets/enemies/igloo-turtle.png', 'assets/enemies/igloo-turtle.json');
 
         // load up audio for the bgm of the map and the jump effect audio
         this.load.audio('HenesysBGM', 'assets/sounds/HenesysMusic.mp3');
@@ -44,9 +45,6 @@ class PlayGame extends Phaser.Scene {
 
         // 14 are "?"" boxes 15 are brick wals 16 are the platform squares
         // 11 and 12 are coins and mushrooms respectively
-
-        // increase the size of the world map by x3
-        layer.setScale(3);
 
         // changes the background color of the canvas
         this.cameras.main.setBackgroundColor(0x6888ff);
@@ -84,6 +82,19 @@ class PlayGame extends Phaser.Scene {
                 this.physics.add.collider(shroom_enemy, layer);
 
                 // put tile 1 to where tile.index is 41 to hide the placeholder for enemy
+                layer.putTileAt(1, tile.x, tile.y);
+            } else if (tile.index == 42){
+                const igloo_turtle_x = tile.getCenterX();
+                const igloo_turtle_y = tile.getCenterY();
+
+                var igloo_turtle = this.physics.add.sprite(igloo_turtle_x, igloo_turtle_y, 'igloo_turtle', 'igloo_turtle_1.png');
+                igloo_turtle.body.setCollideWorldBounds(false);
+                igloo_turtle.anims.play('igloo_turtle_walk_anim');
+
+                // add collision between igloo turtle enemy and map
+                this.physics.add.collider(igloo_turtle, layer);
+
+                // put tile 1 to where tile.index is 42 to hide the placeholder for enemy
                 layer.putTileAt(1, tile.x, tile.y);
             }
         });
@@ -162,7 +173,8 @@ class PlayGame extends Phaser.Scene {
                         }
                     }
 
-                    layer.removeTileAt(coin_tile.x, coin_tile.y);
+                    // replace tile with tile 1
+                    layer.putTileAt(1, coin_tile.x, coin_tile.y);
 
                 } else{
 
@@ -201,8 +213,8 @@ class PlayGame extends Phaser.Scene {
                     }
                 }
 
-                // finally remove the static tile from the origin
-                layer.removeTileAt(tile.x, tile.y);
+                // finally replace the tile with tile 1
+                layer.putTileAt(1, tile.x, tile.y);
             }
 
         });
@@ -391,6 +403,62 @@ class PlayGame extends Phaser.Scene {
                 suffix: '.png',
                 start: 9,
                 end: 12,
+                zeroPad: 0
+            }),
+            repeat: -1
+        });
+
+        // igloo turtle enemy idle anim
+        this.anims.create({
+            key: 'igloo_turtle_idle_anim',
+            frameRate: 6,
+            frames: this.anims.generateFrameNames('igloo_turtle', {
+                prefix: 'igloo_turtle_',
+                suffix: '.png',
+                start: 1,
+                end: 1,
+                zeroPad: 0
+            }),
+            repeat: -1
+        });
+
+        // igloo turtle enemy walk anim
+        this.anims.create({
+            key: 'igloo_turtle_walk_anim',
+            frameRate: 7,
+            frames: this.anims.generateFrameNames('igloo_turtle', {
+                prefix: 'igloo_turtle_',
+                suffix: '.png',
+                start: 2,
+                end: 5,
+                zeroPad: 0
+            }),
+            repeat: -1
+        });
+
+        // igloo turtle enemy hit anim
+        this.anims.create({
+            key: 'igloo_turtle_hit_anim',
+            frameRate: 6,
+            frames: this.anims.generateFrameNames('igloo_turtle', {
+                prefix: 'igloo_turtle_',
+                suffix: '.png',
+                start: 6,
+                end: 6,
+                zeroPad: 0
+            }),
+            repeat: -1
+        });
+
+        // igloo turtle enemy death anim
+        this.anims.create({
+            key: 'igloo_turtle_death_anim',
+            frameRate: 6,
+            frames: this.anims.generateFrameNames('igloo_turtle', {
+                prefix: 'igloo_turtle_',
+                suffix: '.png',
+                start: 7,
+                end: 11,
                 zeroPad: 0
             }),
             repeat: -1
