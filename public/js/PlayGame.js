@@ -80,8 +80,15 @@ class PlayGame extends Phaser.Scene {
                 shroom_enemy.anims.play('shroom_walk_anim');
 
                 // add collision between shroom enemy and map
-                this.physics.add.collider(shroom_enemy, [layer, this.player]);
-                //this.physics.add.collider(this.player, shroom_enemy);
+                this.physics.add.collider(shroom_enemy, layer);
+
+                this.physics.add.collider(this.player, shroom_enemy, shroomcallback , null, this);
+
+                function shroomcallback(){
+                    if(shroom_enemy.body.touching.up && this.player.body.touching.down){
+                        this.player.body.velocity.y *= -1.1;
+                    }
+                }
 
                 // put tile 1 to where tile.index is 41 to hide the placeholder for enemy
                 layer.putTileAt(1, tile.x, tile.y);
@@ -95,7 +102,13 @@ class PlayGame extends Phaser.Scene {
 
                 // add collision between igloo turtle enemy and map
                 this.physics.add.collider(igloo_turtle, layer);
-                this.physics.add.collider(this.player, igloo_turtle);
+                this.physics.add.collider(this.player, igloo_turtle, turtlecallback, null, this);
+
+                function turtlecallback(){
+                    if(igloo_turtle.body.touching.up && this.player.body.touching.down){
+                        this.player.body.velocity.y *= -1.5;
+                    }
+                }
 
                 // put tile 1 to where tile.index is 42 to hide the placeholder for enemy
                 layer.putTileAt(1, tile.x, tile.y);
