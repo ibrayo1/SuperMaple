@@ -80,7 +80,8 @@ class PlayGame extends Phaser.Scene {
                 shroom_enemy.anims.play('shroom_walk_anim');
 
                 // add collision between shroom enemy and map
-                this.physics.add.collider(shroom_enemy, layer);
+                this.physics.add.collider(shroom_enemy, [layer, this.player]);
+                //this.physics.add.collider(this.player, shroom_enemy);
 
                 // put tile 1 to where tile.index is 41 to hide the placeholder for enemy
                 layer.putTileAt(1, tile.x, tile.y);
@@ -94,6 +95,7 @@ class PlayGame extends Phaser.Scene {
 
                 // add collision between igloo turtle enemy and map
                 this.physics.add.collider(igloo_turtle, layer);
+                this.physics.add.collider(this.player, igloo_turtle);
 
                 // put tile 1 to where tile.index is 42 to hide the placeholder for enemy
                 layer.putTileAt(1, tile.x, tile.y);
@@ -160,7 +162,7 @@ class PlayGame extends Phaser.Scene {
                     });
 
                     // add collider callback between player and bounce block with coin tween
-                    let colliderActivated = true;
+                    var colliderActivated = true;
                     this.physics.add.collider(this.player, bounceblock, bounceTile,()=>{
                         return colliderActivated;
                       }, this);
@@ -203,23 +205,22 @@ class PlayGame extends Phaser.Scene {
                     bounceblock.body.allowGravity = false;
                     bounceblock.enableBody = true;
 
-                    // add a tween animation for every bounce block
-                    // pause it so that the tween doesnt start right away
-                    var tween = this.tweens.add({
-                        targets: bounceblock,
-                        y: tile.getCenterY() - 8,
-                        duration: 200,
-                        ease: 'Linear',
-                        yoyo: true,
-                        paused: true
-                    });
-
                     // add a collider callback between the player and the tile
-                    this.physics.add.collider(this.player, bounceblock, bounceTile, null, this);
+                    this.physics.add.collider(this.player, bounceblock, bounceTile, ()=>{ return true; }, this);
 
                     // callback function which enables the bouncing effet on the blocks
                     function bounceTile(){
                         if(bounceblock.body.touching.down ){
+
+                            var tween = this.tweens.add({
+                                targets: bounceblock,
+                                y: tile.getCenterY() - 8,
+                                duration: 200,
+                                ease: 'Linear',
+                                yoyo: true,
+                                paused: true
+                            });
+
                             tween.play();
                         }
                     }
