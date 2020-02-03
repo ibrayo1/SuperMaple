@@ -14,6 +14,7 @@ class TitleScene extends Phaser.Scene {
         this.load.tilemapTiledJSON('map', 'assets/maps/super-mario.json');
         this.load.image('tiles1', 'assets/maps/super-mario.png');
         this.load.spritesheet('mysterybox', 'assets/maps/mysterybox.png', {frameWidth: 48, frameHeight: 48});
+        this.load.spritesheet('portal', 'assets/maps/portal.png', {frameWidth: 134, frameHeight: 150});
         this.load.image('brick', 'assets/maps/brick.png');
         this.load.image('emptybox', 'assets/maps/emptyblock.png');
 
@@ -81,6 +82,14 @@ class TitleScene extends Phaser.Scene {
                 end: 16,
                 zeroPad: 0
             }),
+            repeat: -1
+        });
+
+        // create animation for portal
+        this.anims.create({
+            key: 'portal_anim',
+            frameRate: 8,
+            frames: this.anims.generateFrameNames('portal', {start: 0, end: 7}),
             repeat: -1
         });
 

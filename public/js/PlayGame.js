@@ -37,6 +37,11 @@ class PlayGame extends Phaser.Scene {
         this.player.body.setCollideWorldBounds(false);
         this.player.flipX = true;
 
+        this.portal = this.physics.add.sprite(200, 510, 'portal').play('portal_anim');
+        this.portal.body.setSize(132, 140);
+        this.portal.alpha = 0.90;
+        this.physics.add.collider(this.portal, layer);
+
         // add physics collisions with the player
         this.physics.add.collider(this.player, layer);
 
