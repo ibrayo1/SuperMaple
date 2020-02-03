@@ -58,7 +58,7 @@ class PlayGame extends Phaser.Scene {
 
                 function shroomcallback(){
                     if(shroom_enemy.body.touching.up && this.player.body.touching.down){
-                        this.player.body.velocity.y *= -1.1;
+                        this.player.body.setVelocityY(-300);
                     }
                 }
 
@@ -78,7 +78,7 @@ class PlayGame extends Phaser.Scene {
 
                 function turtlecallback(){
                     if(igloo_turtle.body.touching.up && this.player.body.touching.down){
-                        this.player.body.velocity.y *= -1.5;
+                        this.player.body.setVelocityY(-300);
                     }
                 }
 
