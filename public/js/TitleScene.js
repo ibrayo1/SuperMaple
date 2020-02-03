@@ -13,7 +13,7 @@ class TitleScene extends Phaser.Scene {
         // load up the map and other image we need for the map layer
         this.load.tilemapTiledJSON('map', 'assets/maps/super-mario.json');
         this.load.image('tiles1', 'assets/maps/super-mario.png');
-        this.load.image('?-box', 'assets/maps/mysterybox.png');
+        this.load.spritesheet('mysterybox', 'assets/maps/mysterybox.png', {frameWidth: 48, frameHeight: 48});
         this.load.image('brick', 'assets/maps/brick.png');
         this.load.image('emptybox', 'assets/maps/emptyblock.png');
 
@@ -91,6 +91,14 @@ class TitleScene extends Phaser.Scene {
             frames: this.anims.generateFrameNumbers('coin', {start: 0, end: 3}),
             repeat: -1
         });
+
+        // create animation for mystery box
+        this.anims.create({
+            key: 'mysterybox_anim',
+            frameRate: 5,
+            frames: this.anims.generateFrameNumbers('mysterybox', {start: 0, end: 4}),
+            repeat: -1
+        })
 
         // create animation for explosion
         this.anims.create({

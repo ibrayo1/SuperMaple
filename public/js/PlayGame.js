@@ -125,7 +125,7 @@ class PlayGame extends Phaser.Scene {
                     // switch the tile with its respective sprite tile and set it immovable
                     var bounceblock;
                     if(tile.index == 14){
-                        bounceblock = this.physics.add.image(x, y, '?-box').setImmovable(true);
+                        bounceblock = this.physics.add.sprite(x, y, 'mysterybox').setImmovable(true).play('mysterybox_anim');
                     } else {
                         bounceblock = this.physics.add.image(x, y, 'brick').setImmovable(true);
                     }
@@ -166,6 +166,7 @@ class PlayGame extends Phaser.Scene {
 
                             // change block to empty and make it so player can't get 
                             // any more coins from it
+                            bounceblock.anims.stop(null, true);
                             bounceblock.setTexture('emptybox');
                             this.physics.add.collider(this.player, bounceblock);
                             colliderActivated = false;
@@ -180,7 +181,7 @@ class PlayGame extends Phaser.Scene {
                     // switch the tile with its respective sprite tile and set it immovable
                     var bounceblock;
                     if(tile.index == 14){
-                        bounceblock = this.physics.add.image(x, y, '?-box').setImmovable(true);
+                        bounceblock = this.physics.add.sprite(x, y, 'mysterybox').setImmovable(true).play('mysterybox_anim');
                     } else {
                         bounceblock = this.physics.add.image(x, y, 'brick').setImmovable(true);
                     }
