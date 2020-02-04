@@ -54,16 +54,31 @@ class PlayGame extends Phaser.Scene {
                 // add shroom enemy to the map
                 var shroom_enemy = this.physics.add.sprite(shroom_x, shroom_y, 'shroom_sprite', 'shroom_1.png');
                 shroom_enemy.body.setCollideWorldBounds(false);
-                shroom_enemy.anims.play('shroom_walk_anim');
+                shroom_enemy.anims.play('shroom_walk_anim', true);
 
                 // add collision between shroom enemy and map
                 this.physics.add.collider(shroom_enemy, layer);
 
-                this.physics.add.collider(this.player, shroom_enemy, shroomcallback , null, this);
+                var colider = this.physics.add.collider(this.player, shroom_enemy, shroomcallback , null, this);
 
                 function shroomcallback(){
                     if(shroom_enemy.body.touching.up && this.player.body.touching.down){
-                        this.player.body.setVelocityY(-300);
+                        this.player.body.setVelocityY(-300); // triggers the bounce back from jumping on the shroom
+                        colider.active = false; // turn off collider between player and the enemy
+
+                        // program the enemy's kick after being hit
+                        if(this.player.body.velocity.x > 0){
+                            shroom_enemy.body.velocity.x = 100;
+                        } else if(this.player.body.velocity.x < 0){
+                            shroom_enemy.flipX = true;
+                            shroom_enemy.body.velocity.x = -100;
+                        }
+
+                        // death animaation and destroy the enemy after animation completion
+                        shroom_enemy.anims.play('shroom_death_anim', true);
+                        shroom_enemy.once('animationcomplete', ()=>{ 
+                            shroom_enemy.destroy();
+                        });
                     }
                 }
 
@@ -83,7 +98,7 @@ class PlayGame extends Phaser.Scene {
 
                 function turtlecallback(){
                     if(igloo_turtle.body.touching.up && this.player.body.touching.down){
-                        this.player.body.setVelocityY(-300);
+                        this.player.body.setVelocityY(-300); // triggers the bounce back from jumping on the igloo turtle
                     }
                 }
 
@@ -245,7 +260,10 @@ class PlayGame extends Phaser.Scene {
     update(){
         // control the player with left of right keys
         if (this.cursors.left.isDown){
-            this.player.setVelocityX(-200);
+            if(this.player.body.velocity.x != -200 && !(this.player.body.velocity.x < -200)){
+                this.player.body.velocity.x -= 5;
+            }
+            //this.player.setVelocityX(-200);
 
             this.player.flipX = false; // turns the sprite to face the left
 
@@ -253,7 +271,10 @@ class PlayGame extends Phaser.Scene {
                 this.player.anims.play('player_walk_anim', true);
             }
         } else if (this.cursors.right.isDown){
-            this.player.setVelocityX(200);
+            if(this.player.body.velocity.x != 200 && !(this.player.body.velocity.x > 200)){
+                this.player.body.velocity.x += 5;
+            }
+            //this.player.setVelocityX(200);
 
             this.player.flipX = true; // turns the sprite to face the right
 
@@ -262,16 +283,24 @@ class PlayGame extends Phaser.Scene {
             }
         } else {
             // if no keys are pressed, the player keeps still
-            this.player.setVelocityX(0);
+            if(this.player.body.velocity.x != 0 && this.player.body.velocity.x > 0){
+                this.player.body.velocity.x -= 5;
+            }
+            else if(this.player.body.velocity.x != 0 && this.player.body.velocity.x < 0){
+                this.player.body.velocity.x += 5;
+            }
+            
             // Only show the idle animation if the player is footed
             if(this.player.body.velocity.y == 0 && this.player.body.velocity.x == 0){
                 this.player.anims.play('player_stand_anim', true);
+            } else {
+                this.player.anims.play('player_walk_anim', true);
             }
 
         }
 
         // Player can jump while walking any direction by pressing spacebar or 'up' arrow key
-        if ((this.cursors.space.isDown || this.cursors.up.isDown) && this.player.body.velocity.y == 0 && this.count == 1){
+        if (this.cursors.space.isDown && this.player.body.velocity.y == 0 && this.count == 1){
             this.player.setVelocityY(-650);
 
             // play player jump sound effect

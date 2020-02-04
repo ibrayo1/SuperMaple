@@ -204,7 +204,7 @@ class TitleScene extends Phaser.Scene {
         // shroom enemy death animation
         this.anims.create({
             key: 'shroom_death_anim',
-            frameRate: 6,
+            frameRate: 8,
             frames: this.anims.generateFrameNames('shroom_sprite', {
                 prefix: 'shroom_',
                 suffix: '.png',
@@ -212,7 +212,7 @@ class TitleScene extends Phaser.Scene {
                 end: 12,
                 zeroPad: 0
             }),
-            repeat: -1
+            repeat: 0
         });
 
         // igloo turtle enemy idle anim
